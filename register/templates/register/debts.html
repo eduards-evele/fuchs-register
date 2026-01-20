@@ -1,0 +1,221 @@
+{% extends 'register/base.html' %}
+{% load i18n %}
+{% block content %}
+<div class="page-container">
+    <h1 class="page-title">{% trans "Debts" %}</h1>
+    <p class="page-subtitle">{% trans "Total debt" %}: € {{ total_debt|floatformat:2 }}</p>
+
+    {% if clients_with_debts %}
+    <div class="debts-list">
+        {% for item in clients_with_debts %}
+        <div class="surface debt-client-card">
+            <div class="debt-client-header" onclick="toggleDebtDetails(this)">
+                <div class="debt-client-info">
+                    {% if item.client %}
+                        <span class="client-name">{{ item.client.status }} {{ item.client.firstname }} {{ item.client.lastname }}</span>
+                    {% else %}
+                        <span class="client-name">{% trans "No client" %}</span>
+                    {% endif %}
+                    <span class="client-debt">€ {{ item.total_debt|floatformat:2 }}</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="debt-details" style="display: none;">
+                <table class="debt-operations-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "ID" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Sum" %}</th>
+                            <th>{% trans "Product" %}</th>
+                            <th>{% trans "Comments" %}</th>
+                            <th>{% trans "Author" %}</th>
+                            <th>{% trans "Action" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for op in item.operations %}
+                        <tr>
+                            <td>{{ op.id }}</td>
+                            <td>{{ op.created_at|date:"Y-m-d" }}</td>
+                            <td>{{ op.type }}</td>
+                            <td>€ {{ op.sum|floatformat:2 }}</td>
+                            <td>{% if op.product %}{{ op.product.name }}{% else %}—{% endif %}</td>
+                            <td>{{ op.comments|default:"—" }}</td>
+                            <td>{% if op.author %}{{ op.author.username }}{% else %}—{% endif %}</td>
+                            <td class="op-actions">
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="pay_single">
+                                    <input type="hidden" name="operation_id" value="{{ op.id }}">
+                                    <button type="submit" class="btn-primary btn-sm">{% trans "Pay" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if item.client %}
+                <div class="pay-all-container">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="pay_all">
+                        <input type="hidden" name="client_id" value="{{ item.client.id }}">
+                        <button type="submit" class="btn-primary">{% trans "Pay all" %} (€ {{ item.total_debt|floatformat:2 }})</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="surface no-debts">
+        <p>{% trans "No debts found." %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.debts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.debt-client-card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.debt-client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.debt-client-header:hover {
+    background-color: rgba(0, 128, 128, 0.1);
+}
+
+.debt-client-info {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.client-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+}
+
+.client-debt {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #FF6347;
+}
+
+.expand-icon {
+    transition: transform 0.3s;
+    color: var(--color-primary, #008080);
+}
+
+.debt-client-header.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.debt-details {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 128, 128, 0.2);
+}
+
+.debt-operations-table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.debt-operations-table th,
+.debt-operations-table td {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+/* Reset component.css table overrides for debt table */
+.debt-operations-table tbody tr:first-child {
+    background: var(--color-bg-input, #fff);
+}
+
+.debt-operations-table tbody tr:not(:first-child) {
+    background-color: var(--color-bg-input, #fff);
+}
+
+.debt-operations-table tbody tr:not(:first-child) td {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.debt-operations-table tbody tr:not(:first-child) td:nth-child(1),
+.debt-operations-table tbody tr:not(:first-child) td:nth-child(3),
+.debt-operations-table tbody tr:not(:first-child) td:nth-child(6) {
+    text-align: left;
+}
+
+.pay-all-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 128, 128, 0.2);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Override the button reset from components.css for debt table */
+.debt-operations-table button.btn-primary {
+    all: unset;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: var(--radius-full, 9999px);
+    border: none;
+    background: linear-gradient(135deg, var(--color-teal, #14B8A6), var(--color-teal-dark, #0D9488));
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.debt-operations-table button.btn-primary:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.no-debts {
+    padding: 2rem;
+    text-align: center;
+}
+
+.page-title {
+    margin-bottom: 0.5rem;
+}
+</style>
+
+<script>
+function toggleDebtDetails(header) {
+    const details = header.nextElementSibling;
+    const isHidden = details.style.display === 'none';
+
+    details.style.display = isHidden ? 'block' : 'none';
+    header.classList.toggle('expanded', isHidden);
+}
+</script>
+{% endblock %}

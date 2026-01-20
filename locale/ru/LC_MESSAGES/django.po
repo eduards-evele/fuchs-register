@@ -1,0 +1,201 @@
+# Russian translations for Fuchs Register
+# Copyright (C) 2024
+# This file is distributed under the same license as the Fuchs Register package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Fuchs Register 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+# Base template
+msgid "Fuchs Register"
+msgstr "Fuchs Register"
+
+# Navigation
+msgid "Operations"
+msgstr "Операции"
+
+msgid "Statistics"
+msgstr "Статистика"
+
+msgid "Sales"
+msgstr "Продажи"
+
+msgid "Login"
+msgstr "Вход"
+
+msgid "Logout"
+msgstr "Выход"
+
+# Login page
+msgid "Invalid username or password."
+msgstr "Неверное имя пользователя или пароль."
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Sign In"
+msgstr "Войти"
+
+# Sales page
+msgid "Add purchase"
+msgstr "Добавить покупку"
+
+msgid "Client"
+msgstr "Клиент"
+
+msgid "Select client…"
+msgstr "Выберите клиента…"
+
+msgid "New name"
+msgstr "Новое имя"
+
+msgid "Product"
+msgstr "Товар"
+
+msgid "Select product…"
+msgstr "Выберите товар…"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "On debt"
+msgstr "В долг"
+
+msgid "Comments"
+msgstr "Комментарии"
+
+msgid "Comments (optional)"
+msgstr "Комментарии (необязательно)"
+
+msgid "Add"
+msgstr "Добавить"
+
+# Operations page
+msgid "All clients"
+msgstr "Все клиенты"
+
+msgid "All operations"
+msgstr "Все операции"
+
+msgid "From date"
+msgstr "С даты"
+
+msgid "To date"
+msgstr "По дату"
+
+msgid "Min sum"
+msgstr "Мин. сумма"
+
+msgid "Max sum"
+msgstr "Макс. сумма"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Reset"
+msgstr "Сбросить"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Sum"
+msgstr "Сумма"
+
+msgid "Is paid?"
+msgstr "Оплачено?"
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "You have read-only access. Contact an administrator to add or modify operations."
+msgstr "У вас доступ только для чтения. Обратитесь к администратору для добавления или изменения операций."
+
+msgid "No operations."
+msgstr "Нет операций."
+
+msgid "First page"
+msgstr "Первая страница"
+
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+msgid "Next page"
+msgstr "Следующая страница"
+
+msgid "Last page"
+msgstr "Последняя страница"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Author"
+msgstr "Автор"
+
+# Statistics page
+msgid "From"
+msgstr "С"
+
+msgid "to"
+msgstr "по"
+
+msgid "Income"
+msgstr "Доход"
+
+msgid "Expenses"
+msgstr "Расходы"
+
+msgid "Debt"
+msgstr "Долг"
+
+msgid "Month"
+msgstr "Месяц"
+
+msgid "Year"
+msgstr "Год"
+
+msgid "Apply"
+msgstr "Применить"
+
+# Debts page
+msgid "Debts"
+msgstr "Долги"
+
+msgid "Total debt"
+msgstr "Общий долг"
+
+msgid "No client"
+msgstr "Без клиента"
+
+msgid "Pay"
+msgstr "Оплатить"
+
+msgid "Pay all"
+msgstr "Оплатить все"
+
+msgid "No debts found."
+msgstr "Долги не найдены."

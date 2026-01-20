@@ -1,0 +1,7 @@
+*.sqlite3
+__pycache__
+settings.py
+CLAUDE.md
+.claude
+venv
+populate_db.py

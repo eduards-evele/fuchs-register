@@ -1,0 +1,390 @@
+/* =====================================================================
+   PAGE-SPECIFIC STYLES - Login, Operations, Sales, Statistics
+   ===================================================================== */
+
+/* ====== Login Page ====== */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: var(--space-xl);
+}
+
+.login-form {
+    padding: 32px 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form h1 {
+    text-align: center;
+    color: var(--color-teal-dark);
+    margin-bottom: var(--space-2xl);
+}
+
+.login-form .form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.login-form .form-control {
+    height: 48px;
+    font-size: 15px;
+}
+
+.login-btn {
+    width: 100%;
+    margin-top: var(--space-sm);
+}
+
+.login-error {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-lg);
+    text-align: center;
+    font-size: 14px;
+}
+
+/* ====== Operations Page - Edit Functionality ====== */
+.operation-row .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.operation-row .btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s;
+    font-size: 14px;
+}
+
+.operation-row .btn-edit:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+}
+
+.operation-row .edit-form {
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.operation-row .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 9999px;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.15s;
+}
+
+.operation-row .btn-cancel:hover {
+    background: #d1d5db;
+}
+
+.operation-row .btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.operation-row .form-control-sm {
+    height: 32px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+    background-color: #fff;
+    color: #374151;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.operation-row .form-control-sm:focus {
+    outline: none;
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+}
+
+.operation-row.editing {
+    background-color: rgba(20, 184, 166, 0.05) !important;
+}
+
+.operation-row.editing td {
+    vertical-align: middle;
+}
+
+/* ====== Operations Page - Read-only Notice ====== */
+.readonly-notice-row {
+    background: var(--color-gray-100) !important;
+}
+
+.readonly-notice-row:hover {
+    background: var(--color-gray-100) !important;
+}
+
+.readonly-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-xl);
+    color: var(--color-gray-600);
+    font-size: 14px;
+    font-style: italic;
+}
+
+.readonly-notice::before {
+    content: "i";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--color-gray-300);
+    color: var(--color-bg-input);
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ====== Operations Page - Filter Bar ====== */
+.filter-bar {
+    background: var(--color-bg-surface);
+    padding: var(--space-lg) 18px;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.filter-form {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .filter-form {
+        gap: 10px;
+    }
+
+    .filter-form .form-control,
+    .filter-form .btn-primary {
+        flex: 1 1 100%;
+    }
+
+    .filter-form .btn-primary {
+        width: 100%;
+    }
+}
+
+/* ====== Sales Page ====== */
+.sales-form {
+    padding: 22px 26px;
+    max-width: 900px;
+    margin: 32px auto;
+}
+
+.sales-form .form-row {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.sales-form .form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+    flex: 1;
+}
+
+.sales-form .form-control {
+    height: 44px;
+    padding: 10px var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+}
+
+.sales-form select.form-control {
+    cursor: pointer;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-teal);
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.total-sum {
+    font-size: 48px;
+    color: var(--color-teal-dark);
+}
+
+.sales-form h1 {
+    text-align: center;
+    color: var(--color-teal-dark);
+}
+
+@media (max-width: 768px) {
+    .sales-form .form-row {
+        flex-direction: column;
+    }
+
+    .sales-form .btn-primary {
+        width: 100%;
+    }
+}
+
+/* ====== Statistics Page ====== */
+#total_balance {
+    color: var(--color-text-light);
+    background-color: var(--color-balance);
+    font-size: 48px;
+    text-align: center;
+    margin: auto;
+    width: fit-content;
+    display: block;
+    padding: 40px;
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.page-title {
+    color: var(--color-gray-50);
+    margin-bottom: var(--space-xs);
+}
+
+.page-subtitle {
+    color: var(--color-gray-200);
+    margin-bottom: var(--space-2xl);
+}
+
+.stats-cards {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    padding: var(--space-lg) var(--space-xl);
+    flex: 1;
+    min-width: 200px;
+}
+
+.surface .label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-gray-500);
+    margin-bottom: 6px;
+}
+
+.surface .value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.surface.income .value { color: var(--color-income); }
+.surface.expenses .value { color: var(--color-expenses); }
+.surface.debt .value { color: var(--color-debt); }
+
+.debt-link {
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.debt-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Charts Navigation */
+.charts-nav {
+    padding: var(--space-xl) 18px;
+    margin-bottom: var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.period-links a {
+    text-decoration: none;
+    color: var(--color-teal-dark);
+    font-weight: 600;
+    margin-right: var(--space-lg);
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+}
+
+.period-links a:hover {
+    border-bottom-color: var(--color-teal);
+}
+
+.date-range-form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.date-range-form span {
+    color: var(--color-gray-500);
+}
+
+/* Charts Layout */
+#charts-wrapper {
+    display: flex;
+    gap: var(--space-xl);
+    align-items: stretch;
+}
+
+.chart-item {
+    padding: var(--space-lg);
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    #charts-wrapper {
+        flex-direction: column;
+    }
+
+    .charts-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

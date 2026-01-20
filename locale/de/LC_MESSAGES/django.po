@@ -1,0 +1,201 @@
+# German translations for Fuchs Register
+# Copyright (C) 2024
+# This file is distributed under the same license as the Fuchs Register package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Fuchs Register 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Base template
+msgid "Fuchs Register"
+msgstr "Fuchs Register"
+
+# Navigation
+msgid "Operations"
+msgstr "Operationen"
+
+msgid "Statistics"
+msgstr "Statistiken"
+
+msgid "Sales"
+msgstr "Verkauf"
+
+msgid "Login"
+msgstr "Anmelden"
+
+msgid "Logout"
+msgstr "Abmelden"
+
+# Login page
+msgid "Invalid username or password."
+msgstr "Ungültiger Benutzername oder Passwort."
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Sign In"
+msgstr "Anmelden"
+
+# Sales page
+msgid "Add purchase"
+msgstr "Kauf hinzufügen"
+
+msgid "Client"
+msgstr "Kunde"
+
+msgid "Select client…"
+msgstr "Kunde auswählen…"
+
+msgid "New name"
+msgstr "Neuer Name"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Select product…"
+msgstr "Produkt auswählen…"
+
+msgid "Quantity"
+msgstr "Menge"
+
+msgid "On debt"
+msgstr "Auf Kredit"
+
+msgid "Comments"
+msgstr "Kommentare"
+
+msgid "Comments (optional)"
+msgstr "Kommentare (optional)"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+# Operations page
+msgid "All clients"
+msgstr "Alle Kunden"
+
+msgid "All operations"
+msgstr "Alle Operationen"
+
+msgid "From date"
+msgstr "Von Datum"
+
+msgid "To date"
+msgstr "Bis Datum"
+
+msgid "Min sum"
+msgstr "Min. Betrag"
+
+msgid "Max sum"
+msgstr "Max. Betrag"
+
+msgid "Filter"
+msgstr "Filtern"
+
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Sum"
+msgstr "Betrag"
+
+msgid "Is paid?"
+msgstr "Bezahlt?"
+
+msgid "Action"
+msgstr "Aktion"
+
+msgid "You have read-only access. Contact an administrator to add or modify operations."
+msgstr "Sie haben nur Lesezugriff. Wenden Sie sich an einen Administrator, um Operationen hinzuzufügen oder zu ändern."
+
+msgid "No operations."
+msgstr "Keine Operationen."
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "First page"
+msgstr "Erste Seite"
+
+msgid "Previous page"
+msgstr "Vorherige Seite"
+
+msgid "Next page"
+msgstr "Nächste Seite"
+
+msgid "Last page"
+msgstr "Letzte Seite"
+
+# Statistics page
+msgid "From"
+msgstr "Von"
+
+msgid "to"
+msgstr "bis"
+
+msgid "Income"
+msgstr "Einnahmen"
+
+msgid "Expenses"
+msgstr "Ausgaben"
+
+msgid "Debt"
+msgstr "Schulden"
+
+msgid "Month"
+msgstr "Monat"
+
+msgid "Year"
+msgstr "Jahr"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+# Debts page
+msgid "Debts"
+msgstr "Schulden"
+
+msgid "Total debt"
+msgstr "Gesamtschulden"
+
+msgid "No client"
+msgstr "Kein Kunde"
+
+msgid "Pay"
+msgstr "Bezahlen"
+
+msgid "Pay all"
+msgstr "Alle bezahlen"
+
+msgid "No debts found."
+msgstr "Keine Schulden gefunden."

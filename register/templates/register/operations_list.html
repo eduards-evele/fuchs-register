@@ -1,0 +1,413 @@
+{% extends 'register/base.html' %}
+{% load i18n %}
+{% block content %}
+            <div class="page-container">
+
+            <div class="surface charts-nav">
+                <form method="get" class="date-range-form">
+
+                    <!-- Client -->
+                    <select name="client" class="form-control min-140">
+                        <option value="">{% trans "All clients" %}</option>
+                        {% for c in clients %}
+                            <option value="{{ c.id }}"
+                                {% if request.GET.client == c.id|stringformat:"s" %}selected{% endif %}>
+                                {{ c.status }} {{ c.firstname }} {{ c.lastname }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Operation type -->
+                    <select name="operation" class="form-control min-140">
+                        <option value="">{% trans "All operations" %}</option>
+                        {% for t in types %}
+                            <option value="{{ t.name }}"
+                                {% if request.GET.operation == t.name %}selected{% endif %}>
+                                {{ t.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Date from -->
+                    <input
+                        type="date"
+                        name="date_from"
+                        value="{{ request.GET.date_from }}"
+                        placeholder="{% trans "From date" %}"
+                        class="form-control min-140"
+                    >
+
+                    <!-- Date to -->
+                    <input
+                        type="date"
+                        name="date_to"
+                        value="{{ request.GET.date_to }}"
+                        placeholder="{% trans "To date" %}"
+                        class="form-control min-140"
+                    >
+
+                    <!-- Sum from -->
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="sum_from"
+                        value="{{ request.GET.sum_from }}"
+                        placeholder="{% trans "Min sum" %}"
+                        class="form-control min-110"
+                    >
+
+                    <!-- Sum to -->
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="sum_to"
+                        value="{{ request.GET.sum_to }}"
+                        placeholder="{% trans "Max sum" %}"
+                        class="form-control min-110"
+                    >
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn-primary">
+                        {% trans "Filter" %}
+                    </button>
+                    <button type="button" class="btn-primary" onclick="location.href='{% url 'operations_list' %}'">
+                        {% trans "Reset" %}
+                    </button>
+                </form>
+            </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "ID" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Type" %}</th>
+                    <th>{% trans "Sum" %}</th>
+                    <th>{% trans "Client" %}</th>
+                    <th>{% trans "Product" %}</th>
+                    <th>{% trans "Quantity" %}</th>
+                    <th>{% trans "Is paid?" %}</th>
+                    <th>{% trans "Comments" %}</th>
+                    <th>{% trans "Action" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if is_admin %}
+                <!-- first row: form to add new operation (admin only) -->
+                <tr>
+                    <form method="post" id="op-form">
+                        {% csrf_token %}
+                            <td>—</td>
+                            <td><input type="date" name="date" class="form-control compact"></td>
+                            <td>
+                                <select name="type" class="form-control compact">
+                                    <option value="">—</option>
+                                    {% for t in types %}
+                                    <option value="{{ t.name }}">{{ t.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input id="total" type="number" name="sum" step="0.01" required class="form-control compact"></td>
+                            <td>
+                                <select name="client" onchange="handleClientSelectChange(this)" class="form-control compact">
+                                    <option value="">—</option>
+                                    <option value="__new__">{% trans "New name" %}</option>
+                                    {% for c in clients %}
+                                    <option value="{{ c.id }}">{{ c.status }} {{ c.firstname }} {{ c.lastname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="product" id="product" class="form-control compact">
+                                    <option value="">—</option>
+                                    {% for p in products %}
+                                    <option value="{{ p.id }}-{{ p.price }}">{{ p.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input id="quantity" type="number" name="quantity" step="1" min="0" class="form-control compact"></td>
+                            <td><input type="checkbox" name="isDebt"></td>
+                            <td><input type="text" name="comments" class="form-control compact"></td>
+                            <td><button type="submit" class="btn-primary">{% trans "Add" %}</button></td>
+                    </form>
+                </tr>
+                {% else %}
+                <!-- notification row for non-admin users -->
+                <tr class="readonly-notice-row">
+                    <td colspan="10">
+                        <div class="readonly-notice">
+                            {% trans "You have read-only access. Contact an administrator to add or modify operations." %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                <!-- existing rows: operations list -->
+                {% for op in page_obj %}
+                <tr class="operation-row" data-operation-id="{{ op.id }}">
+                    <td class="op-id">{{ op.id }}</td>
+                    <td class="op-date dates" data-value="{{ op.created_at|date:'Y-m-d' }}">{{ op.created_at | date:"Y-m-d\\TH:i:s" }}</td>
+                    <td class="op-type" data-value="{{ op.type }}">{{ op.type }}</td>
+                    <td class="op-sum" data-value="{{ op.sum }}">{{ op.sum }}</td>
+                    <td class="op-client" data-value="{% if op.client %}{{ op.client.id }}{% endif %}">
+                        {% if op.client %}
+                            {{ op.client.status }} {{ op.client.firstname }} {{ op.client.lastname }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td class="op-product" data-value="{% if op.product %}{{ op.product.id }}{% endif %}">
+                        {% if op.product %}
+                            {{ op.product.name }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td class="op-quantity" data-value="{{ op.quantity|default:'' }}">{{ op.quantity|default:"—" }}</td>
+                    <td class="op-debt" data-value="{{ op.isDebt }}">{{ op.isDebt }}</td>
+                    <td class="op-comments" data-value="{{ op.comments|default:'' }}">{{ op.comments|default:"" }}</td>
+                    <td class="op-actions">
+                        {% if is_admin %}
+                        <div class="action-buttons">
+                            <button type="button" class="btn-edit" onclick="startEdit(this)" title="{% trans 'Edit' %}">✏️</button>
+                        </div>
+                        <form method="post" class="edit-form" id="edit-form-{{ op.id }}" style="display: none;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="edit_operation">
+                            <input type="hidden" name="operation_id" value="{{ op.id }}">
+                            <button type="submit" class="btn-primary btn-sm btn-save">{% trans "Save" %}</button>
+                            <button type="button" class="btn-cancel" onclick="cancelEdit(this)">{% trans "Cancel" %}</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="10">{% trans "No operations." %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+ <div class="pagination">
+    <div class="pagination-controls">
+
+        {% if page_obj.has_previous %}
+            <a class="page-btn" href="?page=1" title="{% trans "First page" %}">
+                «
+            </a>
+            <a class="page-btn" href="?page={{ page_obj.previous_page_number }}" title="{% trans "Previous page" %}">
+                ‹
+            </a>
+        {% endif %}
+
+        <span class="page-indicator">
+            {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a class="page-btn" href="?page={{ page_obj.next_page_number }}" title="{% trans "Next page" %}">
+                ›
+            </a>
+            <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}" title="{% trans "Last page" %}">
+                »
+            </a>
+        {% endif %}
+
+    </div>
+</div>
+</div>
+    </div>
+        <script>
+        // filepath: inline JS in template
+
+// Data for edit dropdowns
+const typesData = [
+    {% for t in types %}
+    { id: {{ t.id }}, name: "{{ t.name }}" }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+const clientsData = [
+    { id: "", name: "—" },
+    {% for c in clients %}
+    { id: {{ c.id }}, name: "{{ c.status }} {{ c.firstname }} {{ c.lastname }}" }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+const productsData = [
+    { id: "", name: "—" },
+    {% for p in products %}
+    { id: {{ p.id }}, name: "{{ p.name }}" }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+function startEdit(btn) {
+    const row = btn.closest('tr');
+    row.classList.add('editing');
+    const opId = row.dataset.operationId;
+
+    // Get current cells
+    const dateCell = row.querySelector('.op-date');
+    const typeCell = row.querySelector('.op-type');
+    const sumCell = row.querySelector('.op-sum');
+    const clientCell = row.querySelector('.op-client');
+    const productCell = row.querySelector('.op-product');
+    const quantityCell = row.querySelector('.op-quantity');
+    const debtCell = row.querySelector('.op-debt');
+    const commentsCell = row.querySelector('.op-comments');
+
+    // Store original HTML for cancel
+    row.dataset.originalDate = dateCell.innerHTML;
+    row.dataset.originalType = typeCell.innerHTML;
+    row.dataset.originalSum = sumCell.innerHTML;
+    row.dataset.originalClient = clientCell.innerHTML;
+    row.dataset.originalProduct = productCell.innerHTML;
+    row.dataset.originalQuantity = quantityCell.innerHTML;
+    row.dataset.originalDebt = debtCell.innerHTML;
+    row.dataset.originalComments = commentsCell.innerHTML;
+
+    // Create date input
+    const dateValue = dateCell.getAttribute('data-value');
+    dateCell.innerHTML = `<input type="date" name="date" form="edit-form-${opId}" class="form-control-sm" value="${dateValue}">`;
+
+    // Create type select
+    const typeValue = typeCell.getAttribute('data-value');
+    let typeOptions = typesData.map(t =>
+        `<option value="${t.name}" ${t.name === typeValue ? 'selected' : ''}>${t.name}</option>`
+    ).join('');
+    typeCell.innerHTML = `<select name="type" form="edit-form-${opId}" class="form-control-sm">${typeOptions}</select>`;
+
+    // Create sum input
+    const sumValue = sumCell.getAttribute('data-value');
+    sumCell.innerHTML = `<input type="number" name="sum" form="edit-form-${opId}" class="form-control-sm" step="0.01" value="${sumValue}">`;
+
+    // Create client select
+    const clientValue = clientCell.getAttribute('data-value');
+    let clientOptions = clientsData.map(c =>
+        `<option value="${c.id}" ${String(c.id) === clientValue ? 'selected' : ''}>${c.name}</option>`
+    ).join('');
+    clientCell.innerHTML = `<select name="client" form="edit-form-${opId}" class="form-control-sm">${clientOptions}</select>`;
+
+    // Create product select
+    const productValue = productCell.getAttribute('data-value');
+    let productOptions = productsData.map(p =>
+        `<option value="${p.id}" ${String(p.id) === productValue ? 'selected' : ''}>${p.name}</option>`
+    ).join('');
+    productCell.innerHTML = `<select name="product" form="edit-form-${opId}" class="form-control-sm">${productOptions}</select>`;
+
+    // Create quantity input
+    const quantityValue = quantityCell.getAttribute('data-value');
+    quantityCell.innerHTML = `<input type="number" name="quantity" form="edit-form-${opId}" class="form-control-sm" step="1" value="${quantityValue}">`;
+
+    // Create isDebt checkbox
+    const debtValue = debtCell.getAttribute('data-value') === 'True';
+    debtCell.innerHTML = `<input type="checkbox" name="isDebt" form="edit-form-${opId}" ${debtValue ? 'checked' : ''}>`;
+
+    // Create comments input
+    const commentsValue = commentsCell.getAttribute('data-value');
+    commentsCell.innerHTML = `<input type="text" name="comments" form="edit-form-${opId}" class="form-control-sm" value="${commentsValue}">`;
+
+    // Show edit form buttons, hide action buttons
+    row.querySelector('.action-buttons').style.display = 'none';
+    row.querySelector('.edit-form').style.display = 'flex';
+}
+
+function cancelEdit(btn) {
+    const row = btn.closest('tr');
+    row.classList.remove('editing');
+
+    // Restore original HTML from stored data
+    row.querySelector('.op-date').innerHTML = row.dataset.originalDate;
+    row.querySelector('.op-type').innerHTML = row.dataset.originalType;
+    row.querySelector('.op-sum').innerHTML = row.dataset.originalSum;
+    row.querySelector('.op-client').innerHTML = row.dataset.originalClient;
+    row.querySelector('.op-product').innerHTML = row.dataset.originalProduct;
+    row.querySelector('.op-quantity').innerHTML = row.dataset.originalQuantity;
+    row.querySelector('.op-debt').innerHTML = row.dataset.originalDebt;
+    row.querySelector('.op-comments').innerHTML = row.dataset.originalComments;
+
+    // Show action buttons, hide edit form
+    row.querySelector('.action-buttons').style.display = 'flex';
+    row.querySelector('.edit-form').style.display = 'none';
+}
+
+        function handleClientSelectChange(sel) {
+    if (!sel) return;
+    if (sel.value === '__new__') {
+
+        window._savedClientSelect = sel.cloneNode(true);
+
+        const td = sel.parentElement;
+
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.gap = '4px';
+        wrapper.style.alignItems = 'center';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'client_new';
+        input.placeholder = 'status firstname lastname';
+        input.required = true;
+        input.setAttribute("form", "op-form");
+        input.className = 'form-control compact';
+        input.style.flex = '1';
+        input.style.minWidth = '0';
+
+        const cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.textContent = 'Cancel';
+        cancel.className = 'btn-primary';
+        cancel.style.padding = '0 10px';
+        cancel.style.height = '36px';
+        cancel.style.flexShrink = '0';
+        cancel.addEventListener('click', function(e) {
+            e.preventDefault();
+            td.innerHTML = '';
+            const freshSelect = window._savedClientSelect.cloneNode(true);
+            freshSelect.onchange = function() { handleClientSelectChange(this); };
+            td.appendChild(freshSelect);
+        });
+
+        td.innerHTML = '';
+        wrapper.appendChild(input);
+        wrapper.appendChild(cancel);
+        td.appendChild(wrapper);
+        input.focus();
+    }
+}
+
+    document.getElementById("product").addEventListener("change", (event) =>  {
+        const product = document.getElementById("product");
+        const price = parseFloat(product.value.split('-')[1]);
+        const quantity = document.getElementById("quantity").value;
+    
+        document.getElementById("total").value = quantity * price;
+        if(selections[0].value && selections[1].value) {
+                document.getElementById("sales-submit").disabled = false;
+        }
+    });
+
+    document.getElementById("quantity").addEventListener("change", (event) =>  {
+    
+        const product = document.getElementById("product");
+        const quantity = parseInt(document.getElementById("quantity").value);
+        const price = parseFloat(product.value.split('-')[1]);
+        document.getElementById("total").value = quantity * price;
+    });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+   
+    document.querySelectorAll(".dates").forEach(cell => {
+        
+        const raw = cell.textContent.trim();
+     
+        const date = new Date(raw);
+        
+        if (!isNaN(date)) {
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yy = String(date.getFullYear())
+
+            cell.textContent = `${dd}.${mm}.${yy}`;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+/* =====================================================================
+   BASE STYLES - Body, links, layout, utility classes
+   ===================================================================== */
+
+/* ====== Base ====== */
+body {
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--color-bg-page);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: var(--color-text-light);
+}
+
+a,
+a:visited {
+    font-style: normal;
+    color: var(--color-text-light);
+    text-decoration: none;
+}
+
+/* ====== Layout ====== */
+.page-container {
+    padding: var(--space-xl);
+    margin: 0 auto;
+}
+
+/* ====== Utility Classes ====== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.min-140 { min-width: 140px; }
+.min-110 { min-width: 110px; }
+.flex-1 { flex: 1; }
+.align-self-end { align-self: flex-end; }
+
+@media (max-width: 1100px) {
+    .min-140,
+    .min-110 {
+        min-width: 0;
+    }
+}

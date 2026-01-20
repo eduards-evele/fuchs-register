@@ -1,0 +1,135 @@
+{% extends 'register/base.html' %}
+{% load i18n %}
+{% block content %}
+<div id="wrapper">
+
+    <form method="post" id="op-form" class="surface-deep sales-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group">
+                <h1>{% trans "Add purchase" %}</h1>
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="sr-only" for="client">{% trans "Client" %}</label>
+                    <select name="client" id="client" class="form-control" onchange="handleClientSelectChange(this)">
+                        <option value="" selected disabled>{% trans "Select client…" %}</option>
+                        <option value="__new__">{% trans "New name" %}</option>
+                        {% for c in clients %}
+                        <option value="{{ c.id }}">{{ c.status }} {{ c.firstname }} {{ c.lastname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="sr-only" for="product">{% trans "Product" %}</label>
+                <select name="product" id="product" class="form-control">
+                    <option value="" selected disabled>{% trans "Select product…" %}</option>
+                    {% for p in products %}
+                    <option value="{{ p.id }}-{{ p.price }}">{{ p.name }} (€ {{ p.price }} )</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="sr-only" for="quantity">{% trans "Quantity" %}</label>
+                <input type="number" name="quantity" id="quantity" class="form-control" value="1" step="1" min="1" placeholder="{% trans "Quantity" %}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <span class="total-sum" id="ttl">€ 0.00</span>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input type="checkbox" name="isDebt" id="isDebt">
+                <label for="isDebt" class="checkbox-label">{% trans "On debt" %}</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group flex-1">
+                <label class="sr-only" for="comments">{% trans "Comments" %}</label>
+                <input type="text" name="comments" id="comments" class="form-control" placeholder="{% trans "Comments (optional)" %}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group align-self-end">
+                <button type="submit" id="sales-submit" disabled class="btn-primary lg">{% trans "Add" %}</button>
+            </div>
+        </div>
+        <input type="hidden" name="total" id="total">
+    </form>
+    <script>
+        const selections = document.querySelectorAll(["#client", "#product"]);
+
+
+        document.getElementById("product").addEventListener("change", (event) =>  {
+     
+            const price = parseFloat(selections[1].value.split('-')[1]);
+            const quantity = document.getElementById("quantity").value;
+            document.getElementById("ttl").innerHTML =  '€ ' +  quantity * price;
+            document.getElementById("total").value = quantity * price;
+            if(selections[0].value && selections[1].value) {
+                    document.getElementById("sales-submit").disabled = false;
+            }
+        });
+
+        document.getElementById("quantity").addEventListener("change", (event) =>  {
+     
+       
+            const quantity = parseInt(document.getElementById("quantity").value);
+            const price = parseFloat(selections[1].value.split('-')[1]);
+            document.getElementById("ttl").innerHTML =  '€ ' + quantity * price;
+            document.getElementById("total").value = quantity * price;
+        });
+
+          document.getElementById("client").addEventListener("change", (event) =>  {
+            if(selections[0].value && selections[1].value) {
+                    document.getElementById("sales-submit").disabled = false;
+            }
+        });
+    
+        function handleClientSelectChange(sel) {
+    if (!sel) return;
+    if (sel.value === '__new__') {
+
+        window._savedClientSelect = sel.cloneNode(true);
+
+        const td = sel.parentElement;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'client_new';
+        input.placeholder = 'status firstname lastname';
+        input.required = true;
+        input.className = 'form-control';
+        input.setAttribute("form", "op-form");   // <-- FIX
+
+        const cancel = document.createElement('button');
+        cancel.className = 'btn-primary';
+        cancel.type = 'button';
+        cancel.textContent = 'Cancel';
+        cancel.addEventListener('click', function(e) {
+            e.preventDefault();
+            td.innerHTML = '';
+            const freshSelect = window._savedClientSelect.cloneNode(true);
+            freshSelect.onchange = function() { handleClientSelectChange(this); };
+            td.appendChild(freshSelect);
+        });
+
+        td.innerHTML = '';
+        td.appendChild(input);
+        td.appendChild(cancel);
+        input.focus();
+    }
+}
+    </script>
+</div>
+{% endblock %}

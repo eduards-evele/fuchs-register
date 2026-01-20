@@ -1,0 +1,132 @@
+{% extends 'register/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="page-container">
+    <div id="total_balance">
+        € {{ balance }}
+    </div>
+    <p class="page-subtitle">{% trans "From" %} {{ from }} {% trans "to" %} {{ to }}</p>
+
+    <div class="stats-cards">
+        <div class="surface stat-card income">
+            <span class="label">{% trans "Income" %}</span>
+            <span class="value">€ {{ income }}</span>
+        </div>
+        <div class="surface stat-card expenses">
+            <span class="label">{% trans "Expenses" %}</span>
+            <span class="value">€ {{ expenses }}</span>
+        </div>
+        <a href="{% url 'debts' %}" class="surface stat-card debt debt-link">
+            <span class="label">{% trans "Debt" %}</span>
+            <span class="value">€ {{ debt }}</span>
+        </a>
+    </div>
+
+    <!-- ====== Charts Navigation ====== -->
+    <div class="surface charts-nav">
+        <div class="period-links">
+            <a href="{% url 'statistics' %}?period=month">{% trans "Month" %}</a>
+            <a href="{% url 'statistics' %}?period=year">{% trans "Year" %}</a>
+        </div>
+
+        <form class="date-range-form" method="get">
+            <input type="date" name="from" required class="form-control min-140">
+            <span>—</span>
+            <input type="date" name="to" required class="form-control min-140">
+            <button type="submit" class="btn-primary">{% trans "Apply" %}</button>
+        </form>
+    </div>
+
+    <script src="{% static 'register/chart.js' %}"></script>
+
+    <div id="charts-wrapper">
+        <div class="surface chart-item">
+            <canvas id="barChart_1"></canvas>
+        </div>
+        <div class="surface chart-item">
+            <canvas id="barChart_2"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    {
+        // Retrieve data from Django
+        const labels_list = {{ labels | safe }};
+        const incomeData = {{ values_1| safe }};
+        const expenseData = {{ values_2 | safe }};
+
+        // Translated labels
+        const incomeLabel = "{% trans 'Income' %}";
+        const expensesLabel = "{% trans 'Expenses' %}";
+
+        // Common styling for both charts
+        const chartOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#008080' // Legend text color
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#008080' // X-axis label color
+                    },
+                    grid: {
+                        display: false, // Remove vertical grid lines
+                        drawBorder: false // Remove axis line
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#008080' // Y-axis number color
+                    },
+                    grid: {
+                        display: false, // Remove horizontal grid lines
+                        drawBorder: false // Remove axis line
+                    }
+                }
+            }
+        };
+
+        // 1. Income Chart Object
+        new Chart(document.getElementById('barChart_1'), {
+            type: 'bar',
+            data: {
+                labels: labels_list,
+                datasets: [{
+                    label: incomeLabel,
+                    data: incomeData,
+                    backgroundColor: '#00FF7F', // Income Color
+                    borderColor: '#F5FFFA',     // Background color as border for contrast
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    barThickness: 40,
+                }]
+            },
+            options: chartOptions
+        });
+
+        // 2. Expenses Chart Object
+        new Chart(document.getElementById('barChart_2'), {
+            type: 'bar',
+            data: {
+                labels: labels_list,
+                datasets: [{
+                    label: expensesLabel,
+                    data: expenseData,
+                    backgroundColor: '#FF6347', // Expenses Color
+                    borderColor: '#F5FFFA',     // Background color as border for contrast
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    barThickness: 40,
+                }]
+            },
+            options: chartOptions
+        });
+    }
+</script>
+{% endblock %}

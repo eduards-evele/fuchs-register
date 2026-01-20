@@ -1,0 +1,56 @@
+{% load static %}
+{% load auth_extras %}
+{% load i18n %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+	<meta charset="utf-8">
+	<title>{% trans "Fuchs Register" %}</title>
+	<link rel="stylesheet" href="{% static 'register/variables.css' %}">
+	<link rel="stylesheet" href="{% static 'register/base.css' %}">
+	<link rel="stylesheet" href="{% static 'register/components.css' %}">
+	<link rel="stylesheet" href="{% static 'register/pages.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Megrim&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+<div id="nav">
+    <a href="{% url 'index' %}" class="nav-logo">
+        <img src="{% static 'logo.png' %}" alt="Logo">
+    </a>
+    <div class="nav-links">
+        {% if user.is_authenticated %}
+            <a href="{% url 'operations_list' %}">{% trans "Operations" %}</a>
+            <a href="{% url 'statistics' %}">{% trans "Statistics" %}</a>
+            <a href="{% url 'sales' %}">{% trans "Sales" %}</a>
+            <a href="{% url 'debts' %}">{% trans "Debts" %}</a>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="nav-logout-btn">{% trans "Logout" %}</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">{% trans "Login" %}</a>
+        {% endif %}
+        <div class="lang-switcher">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            <form method="post" action="{% url 'set_language' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <select name="language" onchange="this.form.submit()" class="lang-select">
+                    {% for lang_code, lang_name in LANGUAGES %}
+                        <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                            {{ lang_code|upper }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
