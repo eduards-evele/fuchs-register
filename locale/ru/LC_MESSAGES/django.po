@@ -199,3 +199,49 @@ msgstr "Оплатить все"
 
 msgid "No debts found."
 msgstr "Долги не найдены."
+
+# Statistics page - Insights
+msgid "Most Popular Product"
+msgstr "Самый популярный товар"
+
+msgid "purchases"
+msgstr "покупок"
+
+msgid "Best Day of Week"
+msgstr "Лучший день недели"
+
+msgid "Best Time of Day"
+msgstr "Лучшее время дня"
+
+msgid "Morning (6-12)"
+msgstr "Утро (6-12)"
+
+msgid "Day (12-18)"
+msgstr "День (12-18)"
+
+msgid "Evening (18-22)"
+msgstr "Вечер (18-22)"
+
+msgid "Night (22-6)"
+msgstr "Ночь (22-6)"
+
+msgid "Sunday"
+msgstr "Воскресенье"
+
+msgid "Monday"
+msgstr "Понедельник"
+
+msgid "Tuesday"
+msgstr "Вторник"
+
+msgid "Wednesday"
+msgstr "Среда"
+
+msgid "Thursday"
+msgstr "Четверг"
+
+msgid "Friday"
+msgstr "Пятница"
+
+msgid "Saturday"
+msgstr "Суббота"

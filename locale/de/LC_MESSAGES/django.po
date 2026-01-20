@@ -199,3 +199,49 @@ msgstr "Alle bezahlen"
 
 msgid "No debts found."
 msgstr "Keine Schulden gefunden."
+
+# Statistics page - Insights
+msgid "Most Popular Product"
+msgstr "Beliebtestes Produkt"
+
+msgid "purchases"
+msgstr "Käufe"
+
+msgid "Best Day of Week"
+msgstr "Bester Wochentag"
+
+msgid "Best Time of Day"
+msgstr "Beste Tageszeit"
+
+msgid "Morning (6-12)"
+msgstr "Morgen (6-12)"
+
+msgid "Day (12-18)"
+msgstr "Tag (12-18)"
+
+msgid "Evening (18-22)"
+msgstr "Abend (18-22)"
+
+msgid "Night (22-6)"
+msgstr "Nacht (22-6)"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgid "Monday"
+msgstr "Montag"
+
+msgid "Tuesday"
+msgstr "Dienstag"
+
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Saturday"
+msgstr "Samstag"

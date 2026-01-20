@@ -23,6 +23,37 @@
         </a>
     </div>
 
+    <!-- ====== Insights Row ====== -->
+    <div class="stats-cards insights-row">
+        <div class="surface stat-card insight">
+            <span class="label">{% trans "Most Popular Product" %}</span>
+            {% if most_popular_product %}
+                <span class="value">{{ most_popular_product }}</span>
+                <span class="subvalue">{{ most_popular_product_count }} {% trans "purchases" %}</span>
+            {% else %}
+                <span class="value empty">—</span>
+            {% endif %}
+        </div>
+        <div class="surface stat-card insight">
+            <span class="label">{% trans "Best Day of Week" %}</span>
+            {% if best_weekday %}
+                <span class="value">{{ best_weekday }}</span>
+                <span class="subvalue">€ {{ best_weekday_income }}</span>
+            {% else %}
+                <span class="value empty">—</span>
+            {% endif %}
+        </div>
+        <div class="surface stat-card insight">
+            <span class="label">{% trans "Best Time of Day" %}</span>
+            {% if best_time_period %}
+                <span class="value">{{ best_time_period }}</span>
+                <span class="subvalue">€ {{ best_time_period_income }}</span>
+            {% else %}
+                <span class="value empty">—</span>
+            {% endif %}
+        </div>
+    </div>
+
     <!-- ====== Charts Navigation ====== -->
     <div class="surface charts-nav">
         <div class="period-links">

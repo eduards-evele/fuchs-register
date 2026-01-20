@@ -3,8 +3,9 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from decimal import Decimal, InvalidOperation
-from django.db.models import Sum
-from django.db.models.functions import TruncDay, TruncMonth
+from django.db.models import Sum, Count, Case, When, Value, CharField
+from django.db.models.functions import TruncDay, TruncMonth, ExtractHour, ExtractWeekDay
+from django.utils.translation import gettext as _
 from django.core.paginator import Paginator
 from datetime import *
 
@@ -283,19 +284,92 @@ def statistics(request):
         sum__lte = 0,
         isDebt = False,
     )
-    .annotate(period=chartUnit) 
-    .values('period')           
-    .annotate(total=Sum('sum')) 
+    .annotate(period=chartUnit)
+    .values('period')
+    .annotate(total=Sum('sum'))
     .order_by('period'))
 
+    # Most Popular Product
+    popular_product_qs = (Operation.objects
+        .filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date,
+            type="PURCHASE",
+            product__isnull=False
+        )
+        .values('product__name')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+        .first())
+
+    most_popular_product = popular_product_qs['product__name'] if popular_product_qs else None
+    most_popular_product_count = popular_product_qs['count'] if popular_product_qs else 0
+
+    # Best Day of Week (ExtractWeekDay: 1=Sunday...7=Saturday on SQLite)
+    weekday_income_qs = (Operation.objects
+        .filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date,
+            sum__gt=0,
+            isDebt=False
+        )
+        .annotate(weekday=ExtractWeekDay('created_at'))
+        .values('weekday')
+        .annotate(total=Sum('sum'))
+        .order_by('-total')
+        .first())
+
+    weekday_names = {
+        1: _('Sunday'), 2: _('Monday'), 3: _('Tuesday'), 4: _('Wednesday'),
+        5: _('Thursday'), 6: _('Friday'), 7: _('Saturday'),
+    }
+    best_weekday = weekday_names.get(weekday_income_qs['weekday']) if weekday_income_qs else None
+    best_weekday_income = round(float(weekday_income_qs['total']), 2) if weekday_income_qs else 0
+
+    # Best Time of Day (Morning 6-12, Day 12-18, Evening 18-22, Night 22-6)
+    time_period_qs = (Operation.objects
+        .filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date,
+            sum__gt=0,
+            isDebt=False
+        )
+        .annotate(hour=ExtractHour('created_at'))
+        .annotate(time_period=Case(
+            When(hour__gte=6, hour__lt=12, then=Value('morning')),
+            When(hour__gte=12, hour__lt=18, then=Value('day')),
+            When(hour__gte=18, hour__lt=22, then=Value('evening')),
+            default=Value('night'),
+            output_field=CharField(),
+        ))
+        .values('time_period')
+        .annotate(total=Sum('sum'))
+        .order_by('-total')
+        .first())
+
+    time_period_labels = {
+        'morning': _('Morning (6-12)'),
+        'day': _('Day (12-18)'),
+        'evening': _('Evening (18-22)'),
+        'night': _('Night (22-6)'),
+    }
+    best_time_period = time_period_labels.get(time_period_qs['time_period']) if time_period_qs else None
+    best_time_period_income = round(float(time_period_qs['total']), 2) if time_period_qs else 0
+
     return render(request, 'register/statistics.html', {
-        'labels' : labels,
-        'values_1' : [float(s['total']) for s in income_qs],
-        'values_2' : [float (s['total']) for s  in expenses_qs],
-        'income' : round(float(income_qs.aggregate(Sum("sum", default=0.0))['sum__sum']), 2),
-        'expenses' : round(float(expenses_qs.aggregate(Sum("sum",default=0.0))['sum__sum']),2),
-        'balance' : round(float(Operation.objects.filter(isDebt=False).aggregate(Sum("sum", default=0.0))['sum__sum']),2),
-        'debt' : round(float(Operation.objects.filter(isDebt=True).aggregate(Sum("sum", default=0.0))['sum__sum']), 2)
+        'labels': labels,
+        'values_1': [float(s['total']) for s in income_qs],
+        'values_2': [float(s['total']) for s in expenses_qs],
+        'income': round(float(income_qs.aggregate(Sum("sum", default=0.0))['sum__sum']), 2),
+        'expenses': round(float(expenses_qs.aggregate(Sum("sum", default=0.0))['sum__sum']), 2),
+        'balance': round(float(Operation.objects.filter(isDebt=False).aggregate(Sum("sum", default=0.0))['sum__sum']), 2),
+        'debt': round(float(Operation.objects.filter(isDebt=True).aggregate(Sum("sum", default=0.0))['sum__sum']), 2),
+        'most_popular_product': most_popular_product,
+        'most_popular_product_count': most_popular_product_count,
+        'best_weekday': best_weekday,
+        'best_weekday_income': best_weekday_income,
+        'best_time_period': best_time_period,
+        'best_time_period_income': best_time_period_income,
     })
 
 

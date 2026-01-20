@@ -388,3 +388,30 @@
         align-items: stretch;
     }
 }
+
+/* ====== Statistics Page - Insights Row ====== */
+.insights-row {
+    margin-top: 0;
+}
+
+.stat-card.insight {
+    text-align: center;
+}
+
+.stat-card.insight .value {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-teal-dark);
+}
+
+.stat-card.insight .value.empty {
+    color: var(--color-gray-400);
+}
+
+.stat-card.insight .subvalue {
+    display: block;
+    font-size: 13px;
+    color: var(--color-gray-500);
+    margin-top: 4px;
+}
