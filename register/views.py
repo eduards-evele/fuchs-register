@@ -142,7 +142,10 @@ def operations_list(request):
             sum_raw = request.POST.get("sum", "").strip()
             client_id = request.POST.get("client") or None
             client_new = request.POST.get("client_new", "").strip()
-            product_id = int(request.POST.get("product").split('-')[0]) or None
+            try:
+               product_id = int(request.POST.get("product").split('-')[0])
+            except ValueError:
+               product_id = None
             quantity_raw = request.POST.get("quantity", "").strip()
             comments = request.POST.get("comments", "").strip() or None
 
