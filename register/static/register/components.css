@@ -320,12 +320,7 @@ tbody tr:not(:first-child) td:last-child {
     color: var(--color-text-placeholder);
 }
 
-/* Remove form styles from data rows */
-tbody tr:not(:first-child) input,
-tbody tr:not(:first-child) select,
-tbody tr:not(:first-child) button {
-    all: unset;
-}
+
 
 /* Fallback for table form elements */
 table input,
